@@ -2,7 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CheckCircle2, Pause, Play, X } from "lucide-react";
-import { REST_SECONDS, routineForLevel, WORK_SECONDS } from "@/lib/exercises";
+import {
+  COUNTDOWN_SECONDS,
+  REST_SECONDS,
+  routineForLevel,
+  WORK_SECONDS,
+} from "@/lib/exercises";
 import { localToday } from "@/lib/localDate";
 
 interface SessionProps {
@@ -10,13 +15,13 @@ interface SessionProps {
   onExit: () => void;
 }
 
-type Phase = "work" | "rest" | "done";
+type Phase = "countdown" | "work" | "rest" | "done";
 
 export default function Session({ level, onExit }: SessionProps) {
   const routine = routineForLevel(level);
-  const [phase, setPhase] = useState<Phase>("work");
+  const [phase, setPhase] = useState<Phase>("countdown");
   const [index, setIndex] = useState(0);
-  const [secondsLeft, setSecondsLeft] = useState(WORK_SECONDS);
+  const [secondsLeft, setSecondsLeft] = useState(COUNTDOWN_SECONDS);
   const [paused, setPaused] = useState(false);
   const completePosted = useRef(false);
 
@@ -30,7 +35,10 @@ export default function Session({ level, onExit }: SessionProps) {
       }
 
       // Timer hit zero — transition.
-      if (phase === "work") {
+      if (phase === "countdown") {
+        setPhase("work");
+        setSecondsLeft(WORK_SECONDS);
+      } else if (phase === "work") {
         if (index >= routine.length - 1) {
           // Last exercise finished → mark today complete (idempotent).
           if (!completePosted.current) {
@@ -82,25 +90,30 @@ export default function Session({ level, onExit }: SessionProps) {
   const current = routine[index];
   const next = routine[index + 1];
   const isRest = phase === "rest";
+  const isCountdown = phase === "countdown";
   const Icon = isRest && next ? next.icon : current.icon;
 
   return (
     <div className="session">
       <p className="session-progress">
-        Exercise {index + 1} of {routine.length}
+        {isCountdown
+          ? "Get ready"
+          : `Exercise ${index + 1} of ${routine.length}`}
       </p>
 
       <div className="session-main">
         <Icon
           size={80}
-          className={`session-icon${isRest ? " resting" : ""}`}
+          className={`session-icon${isRest || isCountdown ? " resting" : ""}`}
           aria-hidden
         />
-        <p className={`session-phase ${isRest ? "rest" : "work"}`}>
-          {isRest ? "Rest" : "Go"}
+        <p
+          className={`session-phase ${isRest || isCountdown ? "rest" : "work"}`}
+        >
+          {isCountdown ? "Starting in" : isRest ? "Rest" : "Go"}
         </p>
         <h1 className="session-exercise-name">
-          {isRest && next ? `Next: ${next.name}` : current.name}
+          {isCountdown ? current.name : isRest && next ? `Next: ${next.name}` : current.name}
         </h1>
         <div className="session-timer" role="timer" aria-live="polite">
           {secondsLeft}
