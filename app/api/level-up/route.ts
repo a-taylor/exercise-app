@@ -8,7 +8,11 @@ export const dynamic = "force-dynamic";
 export async function POST() {
   const result = await dbQuery<{ current_level: number }>(
     `UPDATE state
-       SET current_level = LEAST(current_level + 1, $1)
+       SET current_level = LEAST(current_level + 1, $1),
+           level_started_at = CASE
+             WHEN current_level < $1 THEN current_date
+             ELSE level_started_at
+           END
      WHERE id = 1
      RETURNING current_level`,
     [MAX_LEVEL]

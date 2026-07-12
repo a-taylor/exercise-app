@@ -24,7 +24,9 @@ export async function POST(request: NextRequest) {
   }
 
   await dbQuery(
-    "INSERT INTO completions (date) VALUES ($1) ON CONFLICT (date) DO NOTHING",
+    `INSERT INTO completions (date, level)
+     SELECT $1, current_level FROM state WHERE id = 1
+     ON CONFLICT (date) DO NOTHING`,
     [date ?? serverToday()]
   );
 

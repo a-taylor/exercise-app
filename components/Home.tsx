@@ -6,6 +6,8 @@ import { MAX_LEVEL, routineForLevel } from "@/lib/exercises";
 interface HomeProps {
   currentLevel: number;
   completedToday: boolean;
+  completionsAtLevel: number;
+  daysAtLevel: number;
   onStart: () => void;
   onLevelUp: () => void;
 }
@@ -13,6 +15,8 @@ interface HomeProps {
 export default function Home({
   currentLevel,
   completedToday,
+  completionsAtLevel,
+  daysAtLevel,
   onStart,
   onLevelUp,
 }: HomeProps) {
@@ -27,6 +31,13 @@ export default function Home({
           Level {currentLevel} · {routine.length}{" "}
           {routine.length === 1 ? "exercise" : "exercises"} · 30s each
         </p>
+        {completionsAtLevel > 0 && (
+          <p className="home-stats">
+            Done {completionsAtLevel}{" "}
+            {completionsAtLevel === 1 ? "time" : "times"} over {daysAtLevel}{" "}
+            {daysAtLevel === 1 ? "day" : "days"} at this level
+          </p>
+        )}
         {completedToday && (
           <span className="completed-badge">
             <CheckCircle2 size={18} aria-hidden />
