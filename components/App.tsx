@@ -8,6 +8,8 @@ import { localToday } from "@/lib/localDate";
 interface AppState {
   currentLevel: number;
   completedToday: boolean;
+  completionsAtLevel: number;
+  daysAtLevel: number;
 }
 
 export default function App() {
@@ -34,16 +36,17 @@ export default function App() {
 
   const handleLevelUp = useCallback(async () => {
     try {
-      const res = await fetch("/api/level-up", { method: "POST" });
+      const res = await fetch("/api/level-up", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ date: localToday() }),
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      setState((prev) =>
-        prev ? { ...prev, currentLevel: data.currentLevel } : prev
-      );
+      await refresh();
     } catch {
       // Leave state unchanged; user can retry.
     }
-  }, []);
+  }, [refresh]);
 
   const handleSessionExit = useCallback(() => {
     setInSession(false);
@@ -81,6 +84,8 @@ export default function App() {
       <Home
         currentLevel={state.currentLevel}
         completedToday={state.completedToday}
+        completionsAtLevel={state.completionsAtLevel}
+        daysAtLevel={state.daysAtLevel}
         onStart={() => setInSession(true)}
         onLevelUp={handleLevelUp}
       />

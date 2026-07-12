@@ -28,6 +28,21 @@ CREATE TABLE IF NOT EXISTS completions (
   date         date PRIMARY KEY,
   completed_at timestamptz NOT NULL DEFAULT now()
 );
+
+ALTER TABLE state ADD COLUMN IF NOT EXISTS level_started_at date;
+ALTER TABLE completions ADD COLUMN IF NOT EXISTS level int;
+
+UPDATE state
+   SET level_started_at = COALESCE((SELECT MIN(date) FROM completions), current_date)
+ WHERE id = 1 AND level_started_at IS NULL;
+
+UPDATE completions
+   SET level = (SELECT current_level FROM state WHERE id = 1)
+ WHERE level IS NULL;
+
+ALTER TABLE state ALTER COLUMN level_started_at SET DEFAULT current_date;
+ALTER TABLE state ALTER COLUMN level_started_at SET NOT NULL;
+ALTER TABLE completions ALTER COLUMN level SET NOT NULL;
 `;
 
 let queryPromise: Promise<QueryFn> | null = null;
