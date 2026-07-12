@@ -36,7 +36,11 @@ export default function App() {
 
   const handleLevelUp = useCallback(async () => {
     try {
-      const res = await fetch("/api/level-up", { method: "POST" });
+      const res = await fetch("/api/level-up", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ date: localToday() }),
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       await refresh();
     } catch {
