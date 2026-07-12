@@ -17,6 +17,7 @@ import {
 export const MAX_LEVEL = 12;
 export const WORK_SECONDS = 30;
 export const REST_SECONDS = 10;
+export const COUNTDOWN_SECONDS = 5;
 
 export interface Exercise {
   name: string;
