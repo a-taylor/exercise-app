@@ -1,0 +1,16 @@
+CHANGELOG
+
+## 1.1.0 - 2026-07-14
+
+- Added a menu (burger icon, top-right of the home screen) as extensible
+  chrome for app-wide actions, starting with a single "Level down" item.
+- Added "Level down": decrements the current level by one (floor of 1).
+  Completions logged at the old level are retagged to the new level so
+  completion counts are preserved; "days at this level" restarts from
+  today.
+- Level down requires a confirm tap in the menu before it takes effect.
+
+## 1.0.0 - (initial release)
+
+- Initial release: daily bodyweight exercise routine tracker with guided
+  session timers and manual level-up progression (levels 1-12).

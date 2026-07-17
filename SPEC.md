@@ -36,6 +36,7 @@ Sourced from a NYT article graphic (image not reused directly — see Visual Des
 - Tapping it increments current level by 1, up to a max of 12.
 - At level 12, the control is disabled/hidden with a message (e.g. "Full routine reached").
 - No level-down / undo functionality needed.
+  (Superseded in v1.1 — see CHANGELOG.txt.)
 
 ## Daily Session Flow
 
