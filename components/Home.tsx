@@ -2,6 +2,7 @@
 
 import { CheckCircle2, ChevronUp, Play } from "lucide-react";
 import { MAX_LEVEL, routineForLevel } from "@/lib/exercises";
+import Menu from "@/components/Menu";
 
 interface HomeProps {
   currentLevel: number;
@@ -10,6 +11,7 @@ interface HomeProps {
   daysAtLevel: number;
   onStart: () => void;
   onLevelUp: () => void;
+  onLevelDown: () => void;
 }
 
 export default function Home({
@@ -19,6 +21,7 @@ export default function Home({
   daysAtLevel,
   onStart,
   onLevelUp,
+  onLevelDown,
 }: HomeProps) {
   const routine = routineForLevel(currentLevel);
   const atMax = currentLevel >= MAX_LEVEL;
@@ -26,7 +29,10 @@ export default function Home({
   return (
     <>
       <header className="home-header">
-        <h1 className="home-title">Today&apos;s Routine</h1>
+        <div className="home-header-top">
+          <h1 className="home-title">Today&apos;s Routine</h1>
+          <Menu currentLevel={currentLevel} onLevelDown={onLevelDown} />
+        </div>
         <p className="home-subtitle">
           Level {currentLevel} · {routine.length}{" "}
           {routine.length === 1 ? "exercise" : "exercises"} · 30s each

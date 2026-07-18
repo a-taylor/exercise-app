@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Home from "@/components/Home";
-import Menu from "@/components/Menu";
 import Session from "@/components/Session";
 import { localToday } from "@/lib/localDate";
 
@@ -96,7 +95,6 @@ export default function App() {
 
   return (
     <main className="app">
-      <Menu currentLevel={state.currentLevel} onLevelDown={handleLevelDown} />
       <Home
         currentLevel={state.currentLevel}
         completedToday={state.completedToday}
@@ -104,6 +102,7 @@ export default function App() {
         daysAtLevel={state.daysAtLevel}
         onStart={() => setInSession(true)}
         onLevelUp={handleLevelUp}
+        onLevelDown={handleLevelDown}
       />
     </main>
   );
