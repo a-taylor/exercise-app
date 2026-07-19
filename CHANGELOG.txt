@@ -1,5 +1,20 @@
 CHANGELOG
 
+## 1.2.0 - 2026-07-19
+
+- Added a "Last 4 weeks" view (burger menu → Last 4 weeks): a full-screen,
+  at-a-glance calendar of the last 28 days as a weekday-aligned 4x7 grid.
+  Completed days show a green tick, missed days are empty, today is
+  outlined. Opens over the home screen and closes via the X in its header.
+  Backed by a new GET /api/history?start=&end= endpoint; no schema change
+  (reads the existing completions table).
+
+## 1.1.1 - 2026-07-18
+
+- Fixed the burger menu overlapping the iOS status bar (battery/wifi). It
+  now sits in the home header row, level with the "Today's Routine" title,
+  instead of being absolutely positioned at the top of the screen.
+
 ## 1.1.0 - 2026-07-14
 
 - Added a menu (burger icon, top-right of the home screen) as extensible

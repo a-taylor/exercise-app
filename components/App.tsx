@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Home from "@/components/Home";
+import History from "@/components/History";
 import Session from "@/components/Session";
 import { localToday } from "@/lib/localDate";
 
@@ -16,6 +17,7 @@ export default function App() {
   const [state, setState] = useState<AppState | null>(null);
   const [error, setError] = useState(false);
   const [inSession, setInSession] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
   const refresh = useCallback(async () => {
     try {
@@ -93,6 +95,14 @@ export default function App() {
     );
   }
 
+  if (showHistory) {
+    return (
+      <main className="app">
+        <History onExit={() => setShowHistory(false)} />
+      </main>
+    );
+  }
+
   return (
     <main className="app">
       <Home
@@ -103,6 +113,7 @@ export default function App() {
         onStart={() => setInSession(true)}
         onLevelUp={handleLevelUp}
         onLevelDown={handleLevelDown}
+        onShowHistory={() => setShowHistory(true)}
       />
     </main>
   );

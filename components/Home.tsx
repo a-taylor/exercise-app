@@ -12,6 +12,7 @@ interface HomeProps {
   onStart: () => void;
   onLevelUp: () => void;
   onLevelDown: () => void;
+  onShowHistory: () => void;
 }
 
 export default function Home({
@@ -22,6 +23,7 @@ export default function Home({
   onStart,
   onLevelUp,
   onLevelDown,
+  onShowHistory,
 }: HomeProps) {
   const routine = routineForLevel(currentLevel);
   const atMax = currentLevel >= MAX_LEVEL;
@@ -31,7 +33,11 @@ export default function Home({
       <header className="home-header">
         <div className="home-header-top">
           <h1 className="home-title">Today&apos;s Routine</h1>
-          <Menu currentLevel={currentLevel} onLevelDown={onLevelDown} />
+          <Menu
+            currentLevel={currentLevel}
+            onLevelDown={onLevelDown}
+            onShowHistory={onShowHistory}
+          />
         </div>
         <p className="home-subtitle">
           Level {currentLevel} · {routine.length}{" "}

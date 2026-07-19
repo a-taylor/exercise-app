@@ -6,9 +6,14 @@ import { Menu as MenuIcon } from "lucide-react";
 interface MenuProps {
   currentLevel: number;
   onLevelDown: () => void;
+  onShowHistory: () => void;
 }
 
-export default function Menu({ currentLevel, onLevelDown }: MenuProps) {
+export default function Menu({
+  currentLevel,
+  onLevelDown,
+  onShowHistory,
+}: MenuProps) {
   const [open, setOpen] = useState(false);
   const [confirming, setConfirming] = useState(false);
 
@@ -49,6 +54,17 @@ export default function Menu({ currentLevel, onLevelDown }: MenuProps) {
         <>
           <div className="menu-backdrop" onClick={close} />
           <div className="menu-dropdown" role="menu">
+            <button
+              type="button"
+              className="menu-item"
+              role="menuitem"
+              onClick={() => {
+                onShowHistory();
+                close();
+              }}
+            >
+              Last 4 weeks
+            </button>
             <button
               type="button"
               className="menu-item"

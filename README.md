@@ -62,9 +62,13 @@ npm start`.
 
 ## API
 
-- `GET /api/state?date=YYYY-MM-DD` → `{ currentLevel, completedToday }`
+- `GET /api/state?date=YYYY-MM-DD` → `{ currentLevel, completedToday, completionsAtLevel, daysAtLevel }`
 - `POST /api/level-up` → `{ currentLevel }` (increments, no-op at 12)
+- `POST /api/level-down` → `{ currentLevel }` (decrements, floor of 1; retags the
+  old level's completions so counts are preserved)
 - `POST /api/complete` with `{ "date": "YYYY-MM-DD" }` → idempotent per date
+- `GET /api/history?start=YYYY-MM-DD&end=YYYY-MM-DD` → `{ completed: [...] }` (the
+  completed dates within the range)
 
 "Today" is the client's local calendar date, sent by the app with each
 request; the server falls back to its own UTC date if the parameter is

@@ -153,6 +153,86 @@ button {
   font-weight: 600;
 }
 
+/* ---------- History ---------- */
+
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.history-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.history-subtitle {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  min-height: 1.2em;
+}
+
+.history-weekdays,
+.history-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.history-weekday {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.history-cell {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.history-cell.future {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--surface);
+  opacity: 0.5;
+}
+
+.history-cell.today {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.history-daynum {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 0.65rem;
+  line-height: 1;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.history-cell.done .history-daynum {
+  color: var(--text);
+}
+
+.history-tick {
+  color: var(--accent);
+}
+
+/* ---------- Routine ---------- */
+
 .routine-list {
   list-style: none;
   margin: 20px 0;
