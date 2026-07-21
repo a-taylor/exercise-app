@@ -203,10 +203,8 @@ button {
   justify-content: center;
 }
 
-.history-cell.future {
+.history-cell.pad {
   background: transparent;
-  box-shadow: inset 0 0 0 1px var(--surface);
-  opacity: 0.5;
 }
 
 .history-cell.today {

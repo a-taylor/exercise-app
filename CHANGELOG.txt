@@ -1,5 +1,13 @@
 CHANGELOG
 
+## 1.2.1 - 2026-07-21
+
+- Fixed the "Last 4 weeks" view showing fewer than 28 days and greyed-out
+  future dates whenever today wasn't a Sunday. It now always covers a true
+  trailing 28-day window ending today (partial first week, full weeks in
+  between, partial current week), with blank leading cells to keep the grid
+  aligned under the Mon-Sun weekday header.
+
 ## 1.2.0 - 2026-07-19
 
 - Added a "Last 4 weeks" view (burger menu → Last 4 weeks): a full-screen,

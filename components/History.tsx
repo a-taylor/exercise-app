@@ -13,7 +13,10 @@ interface HistoryProps {
 
 export default function History({ onExit }: HistoryProps) {
   const today = localToday();
-  const { cells, start, end } = useMemo(() => fourWeekWindow(today), [today]);
+  const { cells, leadingPad, start, end } = useMemo(
+    () => fourWeekWindow(today),
+    [today],
+  );
   const [completed, setCompleted] = useState<Set<string> | null>(null);
   const [error, setError] = useState(false);
 
@@ -74,11 +77,13 @@ export default function History({ onExit }: HistoryProps) {
       </div>
 
       <div className="history-grid" role="grid" aria-label="Last 4 weeks">
+        {Array.from({ length: leadingPad }, (_, i) => (
+          <div key={`pad-${i}`} className="history-cell pad" aria-hidden />
+        ))}
         {cells.map((cell) => {
           const done = completed?.has(cell.date) ?? false;
           const className = [
             "history-cell",
-            cell.inFuture ? "future" : "",
             cell.isToday ? "today" : "",
             done ? "done" : "",
           ]
