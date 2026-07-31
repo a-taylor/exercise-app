@@ -17,7 +17,9 @@ export default function History({ onExit }: HistoryProps) {
     () => fourWeekWindow(today),
     [today],
   );
-  const [completed, setCompleted] = useState<Set<string> | null>(null);
+  const [completed, setCompleted] = useState<Map<string, number> | null>(
+    null,
+  );
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -27,8 +29,10 @@ export default function History({ onExit }: HistoryProps) {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
-      .then((data: { completed: string[] }) => {
-        if (!cancelled) setCompleted(new Set(data.completed));
+      .then((data: { completed: { date: string; level: number }[] }) => {
+        if (!cancelled) {
+          setCompleted(new Map(data.completed.map((c) => [c.date, c.level])));
+        }
       })
       .catch(() => {
         if (!cancelled) setError(true);
@@ -81,7 +85,8 @@ export default function History({ onExit }: HistoryProps) {
           <div key={`pad-${i}`} className="history-cell pad" aria-hidden />
         ))}
         {cells.map((cell) => {
-          const done = completed?.has(cell.date) ?? false;
+          const level = completed?.get(cell.date);
+          const done = level !== undefined;
           const className = [
             "history-cell",
             cell.isToday ? "today" : "",
@@ -94,10 +99,17 @@ export default function History({ onExit }: HistoryProps) {
               key={cell.date}
               className={className}
               role="gridcell"
-              aria-label={`${cell.date}${done ? ", completed" : ""}`}
+              aria-label={`${cell.date}${done ? `, completed, ${level} exercises` : ""}`}
             >
               <span className="history-daynum">{cell.dayOfMonth}</span>
-              {done && <Check className="history-tick" size={22} aria-hidden />}
+              {done && (
+                <div className="history-done-stack">
+                  <span className="history-count" aria-hidden>
+                    {level}
+                  </span>
+                  <Check className="history-tick" size={22} aria-hidden />
+                </div>
+              )}
             </div>
           );
         })}

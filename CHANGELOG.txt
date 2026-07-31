@@ -1,5 +1,17 @@
 CHANGELOG
 
+## 1.3.0 - 2026-07-31
+
+- Pausing mid-session (during an exercise or the rest gap) now shows a
+  full-screen "Paused" state with a big pause icon and a Resume button,
+  instead of just freezing the timer in place.
+- Each 30-second exercise now ends with a short beep, so you don't need to
+  be looking at the phone to know time's up.
+- The "Last 4 weeks" view now shows the number of exercises completed (the
+  level at the time) behind the tick on each completed day, e.g. "2".
+  GET /api/history now returns `{ completed: [{ date, level }, ...] }`
+  instead of a plain date array.
+
 ## 1.2.1 - 2026-07-21
 
 - Fixed the "Last 4 weeks" view showing fewer than 28 days and greyed-out

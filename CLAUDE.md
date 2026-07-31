@@ -76,5 +76,6 @@ When you add a feature, update `CHANGELOG.txt`, bump the version in
 - `POST /api/level-down` → decrements level (floor 1); retags the old level's
   completions to preserve counts, restarts "days at level"
 - `POST /api/complete` `{ date }` → records a completion, idempotent per date
-- `GET  /api/history?start=YYYY-MM-DD&end=YYYY-MM-DD` → `{ completed: [...] }`,
-  the completed dates in range (client supplies its local 4-week window)
+- `GET  /api/history?start=YYYY-MM-DD&end=YYYY-MM-DD` → `{ completed: [{ date,
+  level }, ...] }`, the completed dates in range plus the level (= exercise
+  count) completed that day (client supplies its local 4-week window)

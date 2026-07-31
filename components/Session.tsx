@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle2, Pause, Play, X } from "lucide-react";
+import { CheckCircle2, Pause, PauseCircle, Play, X } from "lucide-react";
 import {
   COUNTDOWN_SECONDS,
   REST_SECONDS,
@@ -24,6 +24,29 @@ export default function Session({ level, onExit }: SessionProps) {
   const [secondsLeft, setSecondsLeft] = useState(COUNTDOWN_SECONDS);
   const [paused, setPaused] = useState(false);
   const completePosted = useRef(false);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+
+  // Short beep so a 30s exercise's end is audible without watching the screen.
+  function playExerciseEndChime() {
+    const Ctx =
+      window.AudioContext ??
+      (window as unknown as { webkitAudioContext?: typeof AudioContext })
+        .webkitAudioContext;
+    if (!Ctx) return;
+    if (!audioCtxRef.current) audioCtxRef.current = new Ctx();
+    const ctx = audioCtxRef.current;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 880;
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.3, ctx.currentTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.3);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.3);
+  }
 
   useEffect(() => {
     if (paused || phase === "done") return;
@@ -39,6 +62,7 @@ export default function Session({ level, onExit }: SessionProps) {
         setPhase("work");
         setSecondsLeft(WORK_SECONDS);
       } else if (phase === "work") {
+        playExerciseEndChime();
         if (index >= routine.length - 1) {
           // Last exercise finished → mark today complete (idempotent).
           if (!completePosted.current) {
@@ -83,6 +107,29 @@ export default function Session({ level, onExit }: SessionProps) {
         >
           Done
         </button>
+      </div>
+    );
+  }
+
+  if (paused) {
+    return (
+      <div className="done-screen">
+        <PauseCircle size={96} className="paused-icon" aria-hidden />
+        <h1 className="done-title">Paused</h1>
+        <div className="session-controls" style={{ paddingTop: 0 }}>
+          <button
+            type="button"
+            className="btn btn-start"
+            onClick={() => setPaused(false)}
+          >
+            <Play size={22} aria-hidden />
+            Resume
+          </button>
+          <button type="button" className="btn btn-secondary" onClick={onExit}>
+            <X size={22} aria-hidden />
+            End
+          </button>
+        </div>
       </div>
     );
   }
