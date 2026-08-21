@@ -21,5 +21,8 @@ next-env.d.ts
 # vercel
 .vercel
 
+# Claude Code local tooling/config (not part of the app)
+/.claude/
+
 # reference image — not part of the shipped app
 12well_physed-tmagArticle.jpg
