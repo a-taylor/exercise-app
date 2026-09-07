@@ -42,6 +42,8 @@ production builds, so it never interferes with `next dev`.
   the last exercise finishes.
 - `components/History.tsx` — the 4-week completion grid.
 - `lib/db.ts` — DB access + idempotent schema setup (runs once per process).
+- `lib/chime.ts` — the session's audio cues. Keep the `AudioContext` unlock on
+  a user gesture (Start / Resume); iOS silently refuses to play otherwise.
 - `lib/dates.ts` (server) / `lib/localDate.ts` (client) / `lib/calendar.ts`
   (the 4-week window math).
 

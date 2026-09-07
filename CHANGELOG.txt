@@ -1,5 +1,14 @@
 CHANGELOG
 
+## 1.4.0 - 2026-09-07
+
+- Each exercise now *starts* with a two-note rising cue as well as ending with
+  a beep, so the whole routine can be followed by ear without looking at the
+  phone.
+- Fixed the exercise-end beep never sounding on iOS: the audio context is now
+  created and resumed from the Start (and Resume) tap, which is the only way
+  Safari will let it make sound.
+
 ## 1.3.0 - 2026-07-31
 
 - Pausing mid-session (during an exercise or the rest gap) now shows a

@@ -8,6 +8,7 @@ import {
   routineForLevel,
   WORK_SECONDS,
 } from "@/lib/exercises";
+import { playEndChime, playStartChime, unlockAudio } from "@/lib/chime";
 import { localToday } from "@/lib/localDate";
 
 interface SessionProps {
@@ -24,29 +25,6 @@ export default function Session({ level, onExit }: SessionProps) {
   const [secondsLeft, setSecondsLeft] = useState(COUNTDOWN_SECONDS);
   const [paused, setPaused] = useState(false);
   const completePosted = useRef(false);
-  const audioCtxRef = useRef<AudioContext | null>(null);
-
-  // Short beep so a 30s exercise's end is audible without watching the screen.
-  function playExerciseEndChime() {
-    const Ctx =
-      window.AudioContext ??
-      (window as unknown as { webkitAudioContext?: typeof AudioContext })
-        .webkitAudioContext;
-    if (!Ctx) return;
-    if (!audioCtxRef.current) audioCtxRef.current = new Ctx();
-    const ctx = audioCtxRef.current;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.value = 880;
-    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.3, ctx.currentTime + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.3);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.3);
-  }
 
   useEffect(() => {
     if (paused || phase === "done") return;
@@ -59,10 +37,11 @@ export default function Session({ level, onExit }: SessionProps) {
 
       // Timer hit zero — transition.
       if (phase === "countdown") {
+        playStartChime();
         setPhase("work");
         setSecondsLeft(WORK_SECONDS);
       } else if (phase === "work") {
-        playExerciseEndChime();
+        playEndChime();
         if (index >= routine.length - 1) {
           // Last exercise finished → mark today complete (idempotent).
           if (!completePosted.current) {
@@ -81,6 +60,7 @@ export default function Session({ level, onExit }: SessionProps) {
           setSecondsLeft(REST_SECONDS);
         }
       } else {
+        playStartChime();
         setIndex(index + 1);
         setPhase("work");
         setSecondsLeft(WORK_SECONDS);
@@ -120,7 +100,10 @@ export default function Session({ level, onExit }: SessionProps) {
           <button
             type="button"
             className="btn btn-start"
-            onClick={() => setPaused(false)}
+            onClick={() => {
+              unlockAudio();
+              setPaused(false);
+            }}
           >
             <Play size={22} aria-hidden />
             Resume
@@ -171,7 +154,10 @@ export default function Session({ level, onExit }: SessionProps) {
         <button
           type="button"
           className="btn btn-secondary"
-          onClick={() => setPaused(!paused)}
+          onClick={() => {
+            unlockAudio();
+            setPaused(!paused);
+          }}
         >
           {paused ? <Play size={22} aria-hidden /> : <Pause size={22} aria-hidden />}
           {paused ? "Resume" : "Pause"}

@@ -2,6 +2,7 @@
 
 import { CheckCircle2, ChevronUp, Play } from "lucide-react";
 import { MAX_LEVEL, routineForLevel } from "@/lib/exercises";
+import { unlockAudio } from "@/lib/chime";
 import Menu from "@/components/Menu";
 
 interface HomeProps {
@@ -74,7 +75,15 @@ export default function Home({
       </ul>
 
       <div className="home-actions">
-        <button type="button" className="btn btn-start" onClick={onStart}>
+        <button
+          type="button"
+          className="btn btn-start"
+          onClick={() => {
+            // iOS only lets audio play from a context resumed in a gesture.
+            unlockAudio();
+            onStart();
+          }}
+        >
           <Play size={22} aria-hidden />
           Start
         </button>
