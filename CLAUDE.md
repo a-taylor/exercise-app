@@ -44,6 +44,8 @@ production builds, so it never interferes with `next dev`.
 - `lib/db.ts` — DB access + idempotent schema setup (runs once per process).
 - `lib/chime.ts` — the session's audio cues. Keep the `AudioContext` unlock on
   a user gesture (Start / Resume); iOS silently refuses to play otherwise.
+- `lib/useWakeLock.ts` — holds a screen wake lock for the length of a session;
+  without it iOS sleeps the phone and suspends the timer and the cues.
 - `lib/dates.ts` (server) / `lib/localDate.ts` (client) / `lib/calendar.ts`
   (the 4-week window math).
 

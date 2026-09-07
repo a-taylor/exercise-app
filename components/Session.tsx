@@ -9,6 +9,7 @@ import {
   WORK_SECONDS,
 } from "@/lib/exercises";
 import { playEndChime, playStartChime, unlockAudio } from "@/lib/chime";
+import { useWakeLock } from "@/lib/useWakeLock";
 import { localToday } from "@/lib/localDate";
 
 interface SessionProps {
@@ -25,6 +26,8 @@ export default function Session({ level, onExit }: SessionProps) {
   const [secondsLeft, setSecondsLeft] = useState(COUNTDOWN_SECONDS);
   const [paused, setPaused] = useState(false);
   const completePosted = useRef(false);
+
+  useWakeLock(phase !== "done");
 
   useEffect(() => {
     if (paused || phase === "done") return;

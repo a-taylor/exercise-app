@@ -1,5 +1,16 @@
 CHANGELOG
 
+## 1.5.0 - 2026-09-07
+
+- The session cues are much louder on a phone: they moved up into the
+  1-2kHz band (a phone speaker can barely reproduce the old 660Hz note) and
+  now use square waves. The end-of-exercise cue is three quick blips rather
+  than one, so it's harder to miss. `PEAK_GAIN` in `lib/chime.ts` is the
+  volume knob.
+- The screen no longer dims and sleeps during a session. iOS suspends the
+  timer — and the beeps with it — as soon as the phone sleeps, so a session
+  now holds a screen wake lock and re-takes it after backgrounding.
+
 ## 1.4.0 - 2026-09-07
 
 - Each exercise now *starts* with a two-note rising cue as well as ending with
