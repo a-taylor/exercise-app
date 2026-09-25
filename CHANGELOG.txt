@@ -1,5 +1,16 @@
 CHANGELOG
 
+## 1.6.0 - 2026-09-25
+
+- 6pm reminder: if today's routine isn't logged by 6pm UK time, a push
+  notification nudges you. Turn it on from the menu ("Turn on 6pm reminder")
+  in the Home Screen app — iOS only allows web push for installed apps
+  (iOS 16.4+). Tapping the notification opens the app.
+- A Vercel cron calls `/api/cron/reminder` at 17:00 and 18:00 UTC (one of them
+  is 6pm London whether it's BST or GMT); the route decides in London time,
+  skips days already done, and sends each reminder at most once. More times
+  can be added in `lib/reminders.ts`.
+
 ## 1.5.0 - 2026-09-07
 
 - The session cues are much louder on a phone: they moved up into the

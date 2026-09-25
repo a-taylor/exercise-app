@@ -60,6 +60,37 @@ npm start`.
    (iOS: Share → Add to Home Screen; Android: install prompt / menu →
    Add to Home screen). It launches full-screen with no browser chrome.
 
+## Push reminders
+
+A push notification at 6pm UK time if the day's routine isn't logged. It
+needs four environment variables (Vercel project settings, and `.env.local`
+for local testing):
+
+```
+NEXT_PUBLIC_VAPID_PUBLIC_KEY=...   # from: npx web-push generate-vapid-keys
+VAPID_PRIVATE_KEY=...
+VAPID_SUBJECT=mailto:you@example.com
+CRON_SECRET=...                    # random string, 16+ chars
+```
+
+`NEXT_PUBLIC_VAPID_PUBLIC_KEY` is baked into the client at build time, so
+redeploy after setting it. Then, in the Home Screen app (iOS 16.4+; push isn't
+available in a Safari tab), open the menu → "Turn on 6pm reminder". Check it
+end to end without waiting for 6pm:
+
+```sh
+curl -H "Authorization: Bearer $CRON_SECRET" "https://<your-app>/api/cron/reminder?test=1"
+```
+
+Scheduling: Vercel Hobby only allows once-a-day cron jobs, run anywhere within
+the scheduled hour, and schedules are UTC. `vercel.json` therefore has two
+daily jobs (17:00 and 18:00 UTC — one is 6pm London in BST, the other in
+GMT), and the route decides in Europe/London time. Reminders arrive between
+6:00 and 6:59pm. For more reminder times, add them to `REMINDER_TIMES` in
+`lib/reminders.ts` plus matching cron entries — or point an external cron
+(e.g. cron-job.org, sending the `Authorization` header) at the route every
+15 minutes and drop the `crons` block; the route is safe at any frequency.
+
 ## API
 
 - `GET /api/state?date=YYYY-MM-DD` → `{ currentLevel, completedToday, completionsAtLevel, daysAtLevel }`
@@ -69,6 +100,12 @@ npm start`.
 - `POST /api/complete` with `{ "date": "YYYY-MM-DD" }` → idempotent per date
 - `GET /api/history?start=YYYY-MM-DD&end=YYYY-MM-DD` → `{ completed: [{ date, level }, ...] }`
   (the completed dates within the range, with the level/exercise count completed each day)
+- `POST /api/push/subscribe` with a `PushSubscription` JSON → saves it (idempotent per endpoint)
+- `POST /api/push/unsubscribe` with `{ "endpoint": "..." }` → removes it
+- `GET /api/cron/reminder` (requires `Authorization: Bearer $CRON_SECRET`) →
+  sends the reminder push if a reminder time has passed in UK time and today
+  isn't done; at most once per reminder per day. `?test=1` sends a test push
+  immediately, skipping those checks.
 
 "Today" is the client's local calendar date, sent by the app with each
 request; the server falls back to its own UTC date if the parameter is

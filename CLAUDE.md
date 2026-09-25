@@ -36,7 +36,7 @@ production builds, so it never interferes with `next dev`.
 - `components/Home.tsx` — the default screen: header (with the `Menu`), routine
   list, Start / Level Up.
 - `components/Menu.tsx` — burger dropdown for app-wide actions (currently "Last
-  4 weeks" and "Level down"). Lives in the `Home` header row, not absolutely
+  4 weeks", "Level down", and the reminder on/off toggle). Lives in the `Home` header row, not absolutely
   positioned (it must stay clear of the iOS status bar — see v1.1.1).
 - `components/Session.tsx` — the guided timer flow; posts `/api/complete` when
   the last exercise finishes.
@@ -46,6 +46,13 @@ production builds, so it never interferes with `next dev`.
   a user gesture (Start / Resume); iOS silently refuses to play otherwise.
 - `lib/useWakeLock.ts` — holds a screen wake lock for the length of a session;
   without it iOS sleeps the phone and suspends the timer and the cues.
+- `lib/push.ts` (client) / `lib/reminders.ts` (server) / `public/sw.js` —
+  push reminders. The cron route `app/api/cron/reminder` decides in
+  Europe/London time (Vercel cron is UTC-only) and records sends in
+  `reminders_sent` so duplicate cron runs can't double-notify. Keep
+  `Notification.requestPermission()` the first thing in the tap handler —
+  iOS ignores it otherwise — and always `showNotification` in the SW's
+  `push` handler (iOS revokes silent pushes).
 - `lib/dates.ts` (server) / `lib/localDate.ts` (client) / `lib/calendar.ts`
   (the 4-week window math).
 
@@ -83,3 +90,7 @@ When you add a feature, update `CHANGELOG.txt`, bump the version in
 - `GET  /api/history?start=YYYY-MM-DD&end=YYYY-MM-DD` → `{ completed: [{ date,
   level }, ...] }`, the completed dates in range plus the level (= exercise
   count) completed that day (client supplies its local 4-week window)
+- `POST /api/push/subscribe` (PushSubscription JSON) / `POST
+  /api/push/unsubscribe` `{ endpoint }`
+- `GET  /api/cron/reminder` (Bearer `CRON_SECRET`) → sends the reminder if due
+  in UK time and today isn't done; `?test=1` sends a test push immediately

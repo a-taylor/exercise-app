@@ -1,5 +1,5 @@
-// Minimal service worker: basic offline app-shell caching.
-const CACHE_NAME = "exerciseapp-shell-v1";
+// Service worker: offline app-shell caching and push reminders.
+const CACHE_NAME = "exerciseapp-shell-v2";
 const SHELL_ASSETS = [
   "/",
   "/manifest.webmanifest",
@@ -62,5 +62,34 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
     )
+  );
+});
+
+// Push reminders. iOS requires every push to show a notification, or it may
+// revoke the subscription — so always show one, even for an empty payload.
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    // Non-JSON payload — fall back to the defaults below.
+  }
+  event.waitUntil(
+    self.registration.showNotification(data.title || "Time to exercise", {
+      body: data.body || "You haven't done today's routine yet.",
+      icon: "/icons/icon-192.png",
+      tag: "exercise-reminder",
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((windows) =>
+        windows.length ? windows[0].focus() : self.clients.openWindow("/")
+      )
   );
 });

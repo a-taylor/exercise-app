@@ -1,6 +1,6 @@
 {
   "name": "exerciseapp",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,13 +14,15 @@
     "next": "^15.3.0",
     "pg": "^8.16.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@types/pg": "^8.15.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
+    "@types/web-push": "^3.6.4",
     "typescript": "^5.8.0"
   }
 }

@@ -43,6 +43,20 @@ UPDATE completions
 ALTER TABLE state ALTER COLUMN level_started_at SET DEFAULT current_date;
 ALTER TABLE state ALTER COLUMN level_started_at SET NOT NULL;
 ALTER TABLE completions ALTER COLUMN level SET NOT NULL;
+
+CREATE TABLE IF NOT EXISTS push_subscriptions (
+  endpoint   text PRIMARY KEY,
+  p256dh     text NOT NULL,
+  auth       text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS reminders_sent (
+  date    date NOT NULL,
+  slot    text NOT NULL,
+  sent_at timestamptz NOT NULL DEFAULT now(),
+  PRIMARY KEY (date, slot)
+);
 `;
 
 let queryPromise: Promise<QueryFn> | null = null;
