@@ -1,14 +1,22 @@
 CHANGELOG
 
+## 1.6.2 - 2026-10-12
+
+- Another go at the rotation glitch: 1.6.1's forced repaint didn't fix it, so
+  it's gone. The real trigger looks to be that the session screen (~520px)
+  is taller than a landscape phone (~390px), so the page scrolled mid-rotation.
+  In landscape the session now drops the big icon, shrinks the timer and
+  tightens spacing so it fits without scrolling.
+- The menu now shows the app version at the bottom, so you can tell which
+  build the phone is running.
+
 ## 1.6.1 - 2026-10-12
 
-- Fixed the screen getting stuck "between" portrait and landscape after
-  rotating (doubled buttons and flicker, mostly mid-session), which iOS only
-  cleared on a scroll or after a few seconds. The app now forces a full
-  repaint once a rotation settles, stops iOS enlarging text in landscape, and
-  sizes to the page height rather than the dynamic viewport. Content also
-  clears the notch in landscape. The manifest asks for portrait (Android
-  honours it; iOS ignores it).
+- Tried to fix the screen getting stuck "between" portrait and landscape after
+  rotating (doubled buttons and flicker, mostly mid-session). Stopped iOS
+  enlarging text in landscape, sized to the page height rather than the
+  dynamic viewport, cleared the notch in landscape, and asked for portrait in
+  the manifest (Android honours it; iOS ignores it).
 
 ## 1.6.0 - 2026-09-25
 

@@ -56,12 +56,6 @@ button {
     calc(env(safe-area-inset-left) + 20px);
 }
 
-/* Toggled for a couple of frames after a rotation to force iOS to repaint
-   the whole screen (lib/useRepaintOnResize.ts). */
-.repaint .app {
-  transform: translateZ(0);
-}
-
 /* ---------- Menu ---------- */
 
 .menu {
@@ -121,6 +115,12 @@ button {
 .menu-item:disabled {
   opacity: 0.45;
   cursor: default;
+}
+
+.menu-version {
+  padding: 6px 12px 2px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
 }
 
 /* ---------- Home ---------- */
@@ -439,6 +439,45 @@ button {
 
 .session-controls .btn {
   flex: 1;
+}
+
+/* A landscape phone is ~390px tall, and the session screen is ~520px. A page
+   that scrolls mid-rotation is what leaves iOS showing doubled buttons, so
+   make it fit without scrolling. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .app {
+    padding-top: calc(env(safe-area-inset-top) + 12px);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 12px);
+  }
+
+  .session-main {
+    gap: 8px;
+  }
+
+  .session-icon {
+    display: none;
+  }
+
+  .session-exercise-name {
+    min-height: 0;
+  }
+
+  .session-timer {
+    font-size: 4rem;
+  }
+
+  .session-controls {
+    padding-top: 12px;
+  }
+
+  .done-screen {
+    gap: 12px;
+  }
+
+  .done-screen > svg {
+    width: 64px;
+    height: 64px;
+  }
 }
 
 /* ---------- Done ---------- */

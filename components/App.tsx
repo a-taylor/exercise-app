@@ -5,7 +5,6 @@ import Home from "@/components/Home";
 import History from "@/components/History";
 import Session from "@/components/Session";
 import { localToday } from "@/lib/localDate";
-import { useRepaintOnResize } from "@/lib/useRepaintOnResize";
 
 interface AppState {
   currentLevel: number;
@@ -19,7 +18,6 @@ export default function App() {
   const [error, setError] = useState(false);
   const [inSession, setInSession] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
-  useRepaintOnResize();
 
   const refresh = useCallback(async () => {
     try {

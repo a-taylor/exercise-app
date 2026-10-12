@@ -114,6 +114,7 @@ export default function Menu({
                   : REMINDER_LABELS[pushStatus]}
               </button>
             )}
+            <p className="menu-version">v{process.env.NEXT_PUBLIC_APP_VERSION}</p>
           </div>
         </>
       )}
