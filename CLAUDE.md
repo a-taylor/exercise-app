@@ -46,6 +46,8 @@ production builds, so it never interferes with `next dev`.
   a user gesture (Start / Resume); iOS silently refuses to play otherwise.
 - `lib/useWakeLock.ts` — holds a screen wake lock for the length of a session;
   without it iOS sleeps the phone and suspends the timer and the cues.
+- `lib/useRepaintOnResize.ts` — forces a full repaint after rotation; iOS
+  PWAs otherwise leave stale tiles (doubled buttons) from the old orientation.
 - `lib/push.ts` (client) / `lib/reminders.ts` (server) / `public/sw.js` —
   push reminders. The cron route `app/api/cron/reminder` decides in
   Europe/London time (Vercel cron is UTC-only) and records sends in

@@ -1,5 +1,15 @@
 CHANGELOG
 
+## 1.6.1 - 2026-10-12
+
+- Fixed the screen getting stuck "between" portrait and landscape after
+  rotating (doubled buttons and flicker, mostly mid-session), which iOS only
+  cleared on a scroll or after a few seconds. The app now forces a full
+  repaint once a rotation settles, stops iOS enlarging text in landscape, and
+  sizes to the page height rather than the dynamic viewport. Content also
+  clears the notch in landscape. The manifest asks for portrait (Android
+  honours it; iOS ignores it).
+
 ## 1.6.0 - 2026-09-25
 
 - 6pm reminder: if today's routine isn't logged by 6pm UK time, a push

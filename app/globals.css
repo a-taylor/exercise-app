@@ -21,6 +21,11 @@ body {
   height: 100%;
 }
 
+html {
+  /* Stop iOS inflating text in landscape (a big reflow mid-rotation). */
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   background: var(--bg);
   color: var(--text);
@@ -42,11 +47,19 @@ button {
   position: relative;
   max-width: 480px;
   margin: 0 auto;
-  min-height: 100dvh;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
-  padding: calc(env(safe-area-inset-top) + 24px) 20px
-    calc(env(safe-area-inset-bottom) + 24px);
+  padding: calc(env(safe-area-inset-top) + 24px)
+    calc(env(safe-area-inset-right) + 20px)
+    calc(env(safe-area-inset-bottom) + 24px)
+    calc(env(safe-area-inset-left) + 20px);
+}
+
+/* Toggled for a couple of frames after a rotation to force iOS to repaint
+   the whole screen (lib/useRepaintOnResize.ts). */
+.repaint .app {
+  transform: translateZ(0);
 }
 
 /* ---------- Menu ---------- */
