@@ -44,3 +44,9 @@ export const EXERCISES: Exercise[] = [
 export function routineForLevel(level: number): Exercise[] {
   return EXERCISES.slice(0, Math.min(Math.max(level, 1), MAX_LEVEL));
 }
+
+// Total session length: countdown, each exercise, and a rest between each.
+export function routineSeconds(level: number): number {
+  const n = routineForLevel(level).length;
+  return COUNTDOWN_SECONDS + n * WORK_SECONDS + (n - 1) * REST_SECONDS;
+}

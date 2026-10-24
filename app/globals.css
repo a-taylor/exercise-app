@@ -127,6 +127,7 @@ button {
 
 .home-header {
   margin-bottom: 8px;
+  text-align: center;
 }
 
 .home-header-top {
@@ -141,9 +142,26 @@ button {
   font-weight: 700;
 }
 
+.home-level-label {
+  margin-top: 24px;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.home-level {
+  color: var(--accent);
+  font-size: 4.5rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
 .home-subtitle {
   color: var(--text-dim);
-  margin-top: 4px;
+  margin-top: 8px;
   font-size: 1rem;
 }
 
@@ -260,40 +278,50 @@ button {
 
 /* ---------- Routine ---------- */
 
-.routine-list {
+/* Every exercise as a numbered icon tile, 6 per row, so Home stays the same
+   height at every level (a list of names scrolled from level 7 up). */
+.routine-grid {
   list-style: none;
-  margin: 20px 0;
+  margin: 24px 0 10px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.routine-tile {
+  width: 100%;
+  aspect-ratio: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-}
-
-.routine-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: var(--surface);
-  border-radius: 14px;
-  padding: 14px 16px;
-}
-
-.routine-item-icon {
-  flex-shrink: 0;
-  display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: var(--surface-2);
+  gap: 4px;
+  border-radius: 12px;
+  background: var(--surface);
   color: var(--accent);
 }
 
-.routine-item-index {
-  margin-left: auto;
+.routine-tile.newest {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.routine-tile.selected {
+  background: var(--surface-2);
+}
+
+.routine-tile-index {
   color: var(--text-dim);
+  font-size: 0.8rem;
   font-variant-numeric: tabular-nums;
-  font-size: 0.9rem;
+}
+
+.routine-caption {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .home-actions {
@@ -477,6 +505,35 @@ button {
 
   .done-screen {
     gap: 12px;
+  }
+
+  .home-level-label {
+    margin-top: 0;
+  }
+
+  .home-level {
+    font-size: 2.75rem;
+  }
+
+  /* Home only: use the spare width so all 12 tiles fit on one row. */
+  .app:has(.routine-grid) {
+    max-width: 720px;
+  }
+
+  .routine-grid {
+    grid-template-columns: repeat(12, 1fr);
+    margin: 12px 0 6px;
+    gap: 6px;
+  }
+
+  .home-actions {
+    flex-direction: row;
+    align-items: center;
+    padding-top: 12px;
+  }
+
+  .home-actions > * {
+    flex: 1;
   }
 
   .done-screen > svg {

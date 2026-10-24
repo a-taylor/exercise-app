@@ -1,5 +1,15 @@
 CHANGELOG
 
+## 1.8.0 - 2026-10-24
+
+- Home no longer scrolls at higher levels. The list of exercise names is
+  replaced by a big level number, the session length (~N min), and a grid of
+  numbered exercise icons (6 per row) with the newest one outlined. Tap a
+  tile to see its name in the line below the grid; tap it again to go back to
+  showing the newest exercise.
+- In landscape, Home fits without scrolling too: the tiles go on one row and
+  Start / Level Up sit side by side.
+
 ## 1.7.0 - 2026-10-24
 
 - No more ending a session by accident: while it's running the only button

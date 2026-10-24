@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { CheckCircle2, ChevronUp, Play } from "lucide-react";
-import { MAX_LEVEL, routineForLevel } from "@/lib/exercises";
+import { MAX_LEVEL, routineForLevel, routineSeconds } from "@/lib/exercises";
 import { unlockAudio } from "@/lib/chime";
 import Menu from "@/components/Menu";
 
@@ -28,6 +29,11 @@ export default function Home({
 }: HomeProps) {
   const routine = routineForLevel(currentLevel);
   const atMax = currentLevel >= MAX_LEVEL;
+  const minutes = Math.max(1, Math.round(routineSeconds(currentLevel) / 60));
+  const newest = routine.length - 1;
+  // Tapped tile, whose name the caption shows; null → show the newest.
+  const [selected, setSelected] = useState<number | null>(null);
+  const shown = selected !== null && selected < routine.length ? selected : null;
 
   return (
     <>
@@ -40,9 +46,11 @@ export default function Home({
             onShowHistory={onShowHistory}
           />
         </div>
+        <p className="home-level-label">Level</p>
+        <p className="home-level">{currentLevel}</p>
         <p className="home-subtitle">
-          Level {currentLevel} · {routine.length}{" "}
-          {routine.length === 1 ? "exercise" : "exercises"} · 30s each
+          {routine.length} {routine.length === 1 ? "exercise" : "exercises"} ·
+          ~{minutes} min
         </p>
         {completionsAtLevel > 0 && (
           <p className="home-stats">
@@ -59,20 +67,33 @@ export default function Home({
         )}
       </header>
 
-      <ul className="routine-list">
+      <ul className="routine-grid">
         {routine.map((exercise, i) => {
           const Icon = exercise.icon;
+          const classes = ["routine-tile"];
+          if (i === newest) classes.push("newest");
+          if (i === shown) classes.push("selected");
           return (
-            <li key={exercise.name} className="routine-item">
-              <span className="routine-item-icon">
+            <li key={exercise.name}>
+              <button
+                type="button"
+                className={classes.join(" ")}
+                aria-label={exercise.name}
+                aria-pressed={i === shown}
+                onClick={() => setSelected(i === shown ? null : i)}
+              >
                 <Icon size={22} aria-hidden />
-              </span>
-              <span>{exercise.name}</span>
-              <span className="routine-item-index">{i + 1}</span>
+                <span className="routine-tile-index">{i + 1}</span>
+              </button>
             </li>
           );
         })}
       </ul>
+      <p className="routine-caption" aria-live="polite">
+        {shown !== null
+          ? `${shown + 1} · ${routine[shown].name}`
+          : `Newest: ${routine[newest].name}`}
+      </p>
 
       <div className="home-actions">
         <button

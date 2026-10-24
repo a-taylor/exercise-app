@@ -33,8 +33,9 @@ production builds, so it never interferes with `next dev`.
   `showHistory`) and renders exactly one of `Home` / `Session` / `History`
   full-screen inside `<main className="app">`. New full-screen views follow
   this pattern: add a flag, render the view, pass an `onExit` that clears it.
-- `components/Home.tsx` — the default screen: header (with the `Menu`), routine
-  list, Start / Level Up.
+- `components/Home.tsx` — the default screen: header (with the `Menu`), level
+  hero, exercise icon grid (fixed height at every level — don't bring back a
+  growing list), Start / Level Up.
 - `components/Menu.tsx` — burger dropdown for app-wide actions (currently "Last
   4 weeks", "Level down", and the reminder on/off toggle). Lives in the `Home` header row, not absolutely
   positioned (it must stay clear of the iOS status bar — see v1.1.1).
