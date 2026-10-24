@@ -1,5 +1,14 @@
 CHANGELOG
 
+## 1.7.0 - 2026-10-24
+
+- No more ending a session by accident: while it's running the only button
+  is Pause. End now lives on the Paused screen, alongside Resume and a new
+  Skip.
+- Skip jumps straight into the next exercise and carries on (no rest). From
+  the countdown it starts exercise 1. Skipping the last exercise finishes the
+  routine and still logs today as done.
+
 ## 1.6.2 - 2026-10-12
 
 - Another go at the rotation glitch: 1.6.1's forced repaint didn't fix it, so

@@ -39,7 +39,8 @@ production builds, so it never interferes with `next dev`.
   4 weeks", "Level down", and the reminder on/off toggle). Lives in the `Home` header row, not absolutely
   positioned (it must stay clear of the iOS status bar — see v1.1.1).
 - `components/Session.tsx` — the guided timer flow; posts `/api/complete` when
-  the last exercise finishes.
+  the last exercise finishes (or is skipped). Running shows only Pause; End
+  and Skip live on the Paused screen so a session can't be ended by mistake.
 - `components/History.tsx` — the 4-week completion grid.
 - `lib/db.ts` — DB access + idempotent schema setup (runs once per process).
 - `lib/chime.ts` — the session's audio cues. Keep the `AudioContext` unlock on

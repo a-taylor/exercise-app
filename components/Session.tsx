@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle2, Pause, PauseCircle, Play, X } from "lucide-react";
+import {
+  CheckCircle2,
+  Pause,
+  PauseCircle,
+  Play,
+  SkipForward,
+  X,
+} from "lucide-react";
 import {
   COUNTDOWN_SECONDS,
   REST_SECONDS,
@@ -29,6 +36,37 @@ export default function Session({ level, onExit }: SessionProps) {
 
   useWakeLock(phase !== "done");
 
+  // Last exercise finished (or skipped) → mark today complete (idempotent).
+  function finishRoutine() {
+    if (!completePosted.current) {
+      completePosted.current = true;
+      fetch("/api/complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ date: localToday() }),
+      }).catch(() => {
+        // Non-fatal; completion just won't be recorded if offline.
+      });
+    }
+    setPhase("done");
+  }
+
+  // From the paused screen: drop the current countdown/exercise/rest, go
+  // straight into the next exercise and resume.
+  function skip() {
+    unlockAudio();
+    setPaused(false);
+    if (phase === "work" && index >= routine.length - 1) {
+      playEndChime();
+      finishRoutine();
+      return;
+    }
+    playStartChime();
+    if (phase !== "countdown") setIndex(index + 1);
+    setPhase("work");
+    setSecondsLeft(WORK_SECONDS);
+  }
+
   useEffect(() => {
     if (paused || phase === "done") return;
 
@@ -46,18 +84,7 @@ export default function Session({ level, onExit }: SessionProps) {
       } else if (phase === "work") {
         playEndChime();
         if (index >= routine.length - 1) {
-          // Last exercise finished → mark today complete (idempotent).
-          if (!completePosted.current) {
-            completePosted.current = true;
-            fetch("/api/complete", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ date: localToday() }),
-            }).catch(() => {
-              // Non-fatal; completion just won't be recorded if offline.
-            });
-          }
-          setPhase("done");
+          finishRoutine();
         } else {
           setPhase("rest");
           setSecondsLeft(REST_SECONDS);
@@ -99,7 +126,7 @@ export default function Session({ level, onExit }: SessionProps) {
       <div className="done-screen">
         <PauseCircle size={96} className="paused-icon" aria-hidden />
         <h1 className="done-title">Paused</h1>
-        <div className="session-controls" style={{ paddingTop: 0 }}>
+        <div className="session-controls stacked" style={{ paddingTop: 0 }}>
           <button
             type="button"
             className="btn btn-start"
@@ -110,6 +137,10 @@ export default function Session({ level, onExit }: SessionProps) {
           >
             <Play size={22} aria-hidden />
             Resume
+          </button>
+          <button type="button" className="btn btn-secondary" onClick={skip}>
+            <SkipForward size={22} aria-hidden />
+            Skip
           </button>
           <button type="button" className="btn btn-secondary" onClick={onExit}>
             <X size={22} aria-hidden />
@@ -159,15 +190,11 @@ export default function Session({ level, onExit }: SessionProps) {
           className="btn btn-secondary"
           onClick={() => {
             unlockAudio();
-            setPaused(!paused);
+            setPaused(true);
           }}
         >
-          {paused ? <Play size={22} aria-hidden /> : <Pause size={22} aria-hidden />}
-          {paused ? "Resume" : "Pause"}
-        </button>
-        <button type="button" className="btn btn-secondary" onClick={onExit}>
-          <X size={22} aria-hidden />
-          End
+          <Pause size={22} aria-hidden />
+          Pause
         </button>
       </div>
     </div>

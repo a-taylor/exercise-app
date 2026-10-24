@@ -441,6 +441,11 @@ button {
   flex: 1;
 }
 
+/* Paused: Resume / Skip / End stacked, so End sits furthest from Resume. */
+.session-controls.stacked {
+  flex-direction: column;
+}
+
 /* A landscape phone is ~390px tall, and the session screen is ~520px. A page
    that scrolls mid-rotation is what leaves iOS showing doubled buttons, so
    make it fit without scrolling. */
