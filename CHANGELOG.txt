@@ -1,5 +1,13 @@
 CHANGELOG
 
+## 1.8.1 - 2026-10-26
+
+- Fixed Home's "Done N times over M days" disagreeing with the history. A
+  Level Up then Level Down restarted the days count but kept the earlier
+  completions in the times count, so missed days could vanish (e.g. "11
+  times over 11 days" when it was really 11 over 15). Days now count from
+  the first completion at the current level when that's earlier.
+
 ## 1.8.0 - 2026-10-24
 
 - Home no longer scrolls at higher levels. The list of exercise names is

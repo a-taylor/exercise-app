@@ -26,7 +26,13 @@ export async function GET(request: NextRequest) {
       `SELECT s.current_level,
               (SELECT COUNT(*) FROM completions c
                 WHERE c.level = s.current_level) AS completions_at_level,
-              ($1::date - s.level_started_at + 1) AS days_at_level
+              -- Count from the first completion at this level if it's
+              -- earlier than level_started_at (a level-down retags the old
+              -- level's completions but resets level_started_at), so the
+              -- days figure always covers the same span as the count.
+              ($1::date - LEAST(s.level_started_at,
+                 (SELECT MIN(c.date) FROM completions c
+                   WHERE c.level = s.current_level)) + 1) AS days_at_level
          FROM state s
         WHERE s.id = 1`,
       [date]
